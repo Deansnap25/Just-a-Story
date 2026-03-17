@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>For J.L Love | From Dean</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Great+Vibes&family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: #050505;
+            overflow: hidden;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .grain {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .aurora {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(100, 200, 255, 0.1) 0%, transparent 70%);
+            filter: blur(60px);
+            animation: auroraShift 20s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes auroraShift {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(5deg); }
+            66% { transform: translate(-20px, 20px) rotate(-5deg); }
+        }
+
+        .font-script { font-family: 'Great Vibes', cursive; }
+        .font-cinzel { font-family: 'Cinzel', serif; }
+        .font-playfair { font-family: 'Playfair Display', serif; }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.8),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #fff 0%, #a5b4fc 50%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .text-glow {
+            text-shadow: 0 0 40px rgba(167, 139, 250, 0.5);
+        }
+
+        .letter-spacing-widest { letter-spacing: 0.3em; }
+
+        .fade-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .fade-up.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .btn-magnetic {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .btn-magnetic::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-magnetic:hover::before {
+            left: 100%;
+        }
+
+        .btn-magnetic:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px -10px rgba(167, 139, 250, 0.5);
+        }
+
+        .float-slow {
+            animation: floatSlow 8s ease-in-out infinite;
+        }
+
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
+        }
+
+        .heartbeat-strong {
+            animation: heartbeatStrong 2s ease-in-out infinite;
+        }
+
+        @keyframes heartbeatStrong {
+            0%, 100% { transform: scale(1); }
+            15% { transform: scale(1.15); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.15); }
+            60% { transform: scale(1); }
+        }
+
+        #particleCanvas {
+            position: fixed;
+            top: 0; left: 0;
+            z-index: 1;
+        }
+
+        .scene-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .scene-dot.active {
+            background: #fff;
+            transform: scale(1.5);
+            box-shadow: 0 0 20px rgba(255,255,255,0.8);
+        }
+
+        .scene-dot.visited {
+            background: rgba(167, 139, 250, 0.8);
+        }
+
+        .love-letter {
+            background: linear-gradient(135deg, rgba(20,20,30,0.9), rgba(40,30,50,0.9));
+            border: 1px solid rgba(255,200,200,0.1);
+            position: relative;
+        }
+
+        .love-letter::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3, #ff6b6b);
+            background-size: 200% 100%;
+            animation: rainbow 3s linear infinite;
+        }
+
+        @keyframes rainbow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        .seal {
+            width: 60px; height: 60px;
+            background: radial-gradient(circle, #e74c3c 0%, #c0392b 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+            animation: sealPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes sealPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 6px 25px rgba(231, 76, 60, 0.6); }
+        }
+
+        .sender-signature-static {
+            font-family: 'Great Vibes', cursive;
+            font-size: 1.5rem;
+            color: rgba(255, 200, 200, 0.6);
+            transform: rotate(-5deg);
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .sender-signature-static:hover {
+            color: rgba(255, 200, 200, 1);
+            transform: rotate(0deg) scale(1.1);
+        }
+
+        /* POLAROID STYLES - ADDED BACK */
+        .photo-polaroid {
+            background: white;
+            padding: 10px 10px 30px 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transform: rotate(-3deg);
+            transition: all 0.3s ease;
+            max-width: 250px;
+            margin: 20px auto;
+        }
+
+        .photo-polaroid:hover {
+            transform: rotate(0deg) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .photo-polaroid img {
+            width: 100%;
+            display: block;
+        }
+
+        .photo-caption {
+            font-family: 'Great Vibes', cursive;
+            color: #333;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 1.2rem;
+        }
+
+        /* SCENE PHOTO STYLES */
+        .scene-photo {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            margin: 20px auto;
+            display: block;
+            transition: all 0.5s ease;
+        }
+
+        .scene-photo:hover {
+            transform: scale(1.05);
+            border-color: rgba(255, 200, 200, 0.5);
+            box-shadow: 0 15px 50px rgba(255, 100, 150, 0.3);
+        }
+
+        .for-badge {
+            background: linear-gradient(135deg, rgba(255,100,150,0.2), rgba(100,100,255,0.2));
+            border: 1px solid rgba(255,200,200,0.3);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(255,200,200,0.8);
+        }
+
+        /* Main Card Scrollable */
+        #mainCard {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.2) transparent;
+        }
+
+        #mainCard::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #mainCard::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        #mainCard::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 640px) {
+            #mainCard {
+                max-height: 80vh;
+                padding: 1.5rem;
+            }
+            
+            #contentArea h1 {
+                font-size: 2.5rem !important;
+                line-height: 1.2;
+            }
+            
+            #contentArea p {
+                font-size: 1.1rem !important;
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+            }
+            
+            .scene-photo {
+                width: 150px !important;
+                height: 150px !important;
+            }
+            
+            .photo-polaroid {
+                max-width: 180px;
+                padding: 6px 6px 20px 6px;
+            }
+            
+            .sender-signature-static {
+                font-size: 1.2rem;
+                margin-top: 2rem;
+                margin-bottom: 2rem;
+            }
+            
+            .sticky.bottom-0 {
+                padding: 1rem;
+            }
+            
+            #prevBtn, #nextBtn {
+                min-height: 44px;
+                min-width: 44px;
+            }
+        }
+
+        /* Ensure buttons are clickable */
+        #prevBtn, #nextBtn {
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-magnetic {
+            user-select: none;
+            -webkit-user-select: none;
+        }
+    </style>
+</head>
+
+   
+<body class="text-white antialiased">
+
+    <div class="grain"></div>
+    <div class="aurora"></div>
+    <canvas id="particleCanvas"></canvas>
+
+    <div class="relative z-10 min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-4xl">
+            
+            <!-- Top: From Dean | For J.L Love -->
+            <div class="flex justify-between items-center mb-4 px-4">
+                <div class="for-badge">For J.L Love</div>
+                <div class="font-script text-2xl text-pink-300 opacity-70">From Dean</div>
+            </div>
+
+            <div class="flex justify-between items-center mb-8 px-4 opacity-60">
+                <div class="font-cinzel text-xs tracking-[0.4em] uppercase">Our Story</div>
+                <div class="flex gap-3" id="progressDots"></div>
+            </div>
+            <!-- Main Card - Scrollable -->
+            <div id="mainCard" class="glass-card rounded-3xl p-6 md:p-12 relative transition-all duration-1000 w-full max-h-[85vh] overflow-y-auto">
+                
+                <div id="cardGlow" class="absolute inset-0 opacity-0 transition-opacity duration-1000 pointer-events-none"></div>
+
+                <!-- Content Area -->
+                <div class="relative z-10 max-w-2xl mx-auto pb-32 pt-4">
+                    
+                    <div id="photoContainer" class="hidden mb-6 flex justify-center"></div>
+
+                    <div id="contentArea" class="text-center transition-all duration-500"></div>
+                    
+                    <!-- Sender Signature -->
+                    <div class="text-right mt-8 mb-8 sender-signature-static">— Dean</div>
+                    
+                </div>
+
+                <!-- Sticky Bottom Navigation -->
+                <div class="sticky bottom-0 left-0 right-0 p-4 md:p-6 bg-gradient-to-t from-black via-black/90 to-transparent flex justify-center items-center gap-4 z-20 mt-auto">
+                    <button id="prevBtn" onclick="navigate(-1)" class="btn-magnetic px-5 py-3 rounded-full border border-white/20 text-xs md:text-sm tracking-widest uppercase opacity-60 hover:opacity-100 transition-all duration-300 hidden">
+                        ← Back
+                    </button>
+                    
+                    <button id="nextBtn" onclick="navigate(1)" class="btn-magnetic px-8 py-3 md:px-10 md:py-4 rounded-full bg-white text-black font-semibold tracking-wider text-xs md:text-sm uppercase transition-all duration-300 hover:bg-gray-100 shadow-lg">
+                        Begin Journey
+                    </button>
+                </div>
+
+                <!-- Corner Decorations -->
+                <div class="absolute top-6 left-6 w-10 h-10 md:w-12 md:h-12 border-l-2 border-t-2 border-white/20 rounded-tl-xl pointer-events-none"></div>
+                <div class="absolute top-6 right-6 w-10 h-10 md:w-12 md:h-12 border-r-2 border-t-2 border-white/20 rounded-tr-xl pointer-events-none"></div>
+                <div class="absolute bottom-32 left-6 w-10 h-10 md:w-12 md:h-12 border-l-2 border-b-2 border-white/20 rounded-bl-xl pointer-events-none"></div>
+                <div class="absolute bottom-32 right-6 w-10 h-10 md:w-12 md:h-12 border-r-2 border-b-2 border-white/20 rounded-br-xl pointer-events-none"></div>
+            </div>
+            <!-- Final Letter - Scrollable -->
+            <div id="finalLetter" class="hidden love-letter rounded-3xl p-6 md:p-12 mt-8 transform scale-95 opacity-0 transition-all duration-1000 w-full max-h-[85vh] overflow-y-auto relative">
+                <div class="flex flex-col items-center text-center pb-24">
+                    
+                    <!-- For J.L Love on seal -->
+                    <div class="mb-2 font-cinzel text-xs tracking-[0.3em] text-pink-300 uppercase">For J.L Love</div>
+                    
+                    <div class="seal mb-4 w-12 h-12 md:w-16 md:h-16 text-xl md:text-2xl">💌</div>
+                    <h2 class="font-script text-4xl md:text-7xl text-pink-200 mb-4 md:mb-6">To You</h2>
+                    
+                    <div id="finalPhotoContainer" class="hidden mb-4 md:mb-6 w-full flex justify-center"></div>
+                    
+                    <div class="font-playfair text-base md:text-xl leading-relaxed text-gray-200 max-w-2xl space-y-4 md:space-y-6 text-left px-2 md:px-0">
+                        <p id="letterContent"></p>
+                    </div>
+                    
+                    <div class="mt-6 md:mt-8 font-script text-3xl md:text-4xl text-pink-300">— Dean</div>
+                    <div class="mt-2 font-cinzel text-xs tracking-widest text-gray-500">FOR J.L LOVE</div>
+                </div>
+                
+                <!-- Sticky Close Button -->
+                <div class="sticky bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black via-black/90 to-transparent flex justify-center z-20">
+                    <button onclick="hideFinalLetter()" class="btn-magnetic px-6 py-3 rounded-full border border-white/20 text-xs tracking-widest uppercase opacity-70 hover:opacity-100 transition-all bg-black/50">
+                        Close Letter
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script>
+        // ==========================================
+        // YOUR STORY
+        // ==========================================
+        
+        const STORY_DATA = [
+            {
+                chapter: "First Impression",
+                title: "Just Someone",
+                content: `When we first met, you were just someone I happened to know. Nothing special yet—just another person in my day.`,
+                subtext: "Before everything changed",
+                theme: "gray",
+                particleMode: "chaos",
+                icon: ".✦ ݁˖",
+                photo: null,
+                photoStyle: "circle",
+                photoCaption: null
+            },
+            {
+                chapter: "A Small Moment",
+                title: "The Game",
+                content: `One day you asked me to play a game with you. It was a simple moment, but somehow it made me notice you more.`,
+                subtext: "A small start",
+                theme: "blue",
+                particleMode: "focus",
+                icon: "🎮",
+                photo: "Out.jpg",
+                photoStyle: "circle",
+                photoCaption: null
+            },
+            {
+                chapter: "Getting Comfortable",
+                title: "Good Company",
+                content: `As we spent more time together, things started feeling natural. We talked about random things, laughed a lot, and slowly got used to having each other around.`,
+                subtext: "Easy conversations",
+                theme: "gold",
+                particleMode: "orbit",
+                icon: "🤝",
+                photo: "Just.jpg",
+                photoStyle: "polaroid",
+                photoCaption: "Chillin"
+            },
+            {
+                chapter: "Our Connection",
+                title: "Same Wavelength",
+                content: `One thing I started noticing about us is how similar we are. Sometimes we think about the same things, and there are moments when we even say the same words at the same time. It's funny, but it also makes me feel like we understand each other in a way that's hard to explain.`,
+                subtext: "Some things just click",
+                theme: "blue",
+                particleMode: "orbit",
+                icon: "✨",
+                photo: "Mnu.jpg",
+                photoStyle: "polaroid",
+                photoCaption: "Special Date 12.27.25"
+            },
+            {
+                chapter: "A Special Gift",
+                title: "My First Gift",
+                content: `I still remember that Christmas when you surprised me with a stuffed animal—my favorite! I didn't expect anyone to give me a gift like that, especially not you. That little moment became one of my favorite memories, our own mini Christmas date before the holidays. It made me realize even more how thoughtful and special you are.`,
+                subtext: "A gift from the heart",
+                theme: "pink",
+                particleMode: "bloom",
+                icon: "🎁",
+                photo: "Gift.jpg",
+                photoStyle: "polaroid",
+                photoCaption: "Christmas Gift ♡"
+            },
+            {
+                chapter: "Something Changed",
+                title: "Quiet Feelings",
+                content: `At some point, I realized my feelings weren't the same anymore. I started liking you more than I expected, but I kept it to myself because I didn't know how you felt.`,
+                subtext: "Unsaid things",
+                theme: "purple",
+                particleMode: "scatter",
+                icon: "🌙",
+                photo: null,
+                photoStyle: "circle",
+                photoCaption: null
+            },
+            {
+                chapter: "New Year's Eve",
+                title: "Your Question",
+                content: `On New Year's Eve, you told me how you felt and asked if you could court me. I honestly didn't expect it, but hearing it meant a lot to me.`,
+                subtext: "A moment I'll remember",
+                theme: "pink",
+                particleMode: "burst",
+                icon: "🎆",
+                photo: null,
+                photoStyle: "circle",
+                photoCaption: null
+            },
+            {
+                chapter: "Taking Time",
+                title: "Three Days",
+                content: `I asked for time to think. For three days, I kept thinking about everything—our memories, our conversations, and what it would mean if I said yes.`,
+                subtext: "Thinking it through",
+                theme: "rose",
+                particleMode: "pulse",
+                icon: "⏳",
+                photo: null,
+                photoStyle: "circle",
+                photoCaption: null
+            },
+            {
+                chapter: "My Answer",
+                title: "A Chance",
+                content: `After three days, I gave you my answer. I said yes to letting you court me. It wasn't a promise of forever yet, but it was a chance for us to see where this could go.`,
+                subtext: "A new step",
+                theme: "red",
+                particleMode: "bloom",
+                icon: "🌷",
+                photo: null,
+                photoStyle: "circle",
+                photoCaption: null
+            },
+            {
+                chapter: "Memories Together",
+                title: "Simple Moments",
+                content: `Since then, we've shared a lot of small but meaningful moments. Random talks, unexpected dates, and days that turned out fun even when we didn't plan much. Even when we didn't have a lot of money, we still found ways to enjoy our time together.`,
+                subtext: "The little things",
+                theme: "crimson",
+                particleMode: "spiral",
+                icon: "📅",
+                photo: "QC.jpg",
+                photoStyle: "polaroid",
+                photoCaption: "(˶˃ ᵕ ˂˶)"
+            },
+            {
+                chapter: "Waiting",
+                title: "Right Time",
+                content: `We're not officially together yet. Not because I don't want to be, but because I'm waiting for the right moment for both of us.`,
+                subtext: "Worth waiting for",
+                theme: "wine",
+                particleMode: "glow",
+                icon: "💫",
+                photo: null,
+                photoStyle: "circle",
+                photoCaption: null
+            },
+            {
+                chapter: "One Thing Is Clear",
+                title: "Only You",
+                content: `Even without a label, one thing is clear to me—you are the only one I see. My feelings are real, and they haven't changed.`,
+                subtext: "No second thoughts",
+                theme: "love",
+                particleMode: "heart",
+                icon: ".✦ ݁˖",
+                photo: "Gala.jpg",
+                photoStyle: "circle",
+                photoCaption: null
+            },
+            {
+                chapter: "What I Want to Say",
+                title: "I Love You",
+                content: `After everything we've shared, I realized something simple but important. I love you. And when the right moment finally comes, I'll be ready for us to take that step together.`,
+                subtext: "Simple and true",
+                theme: "white",
+                particleMode: "explode",
+                icon: "❤️",
+                photo: null,
+                photoStyle: "circle",
+                photoCaption: null
+            }
+        ];
+        // ==========================================
+        // FINAL LETTER
+        // ==========================================
+        
+        const FINAL_LETTER_CONTENT = `
+            To you,<br><br>
+
+            Thank you for being part of my life—not just as someone special, but first as my friend and my best friend. 
+            You've always been there for me, and I truly hope we continue being there for each other.<br><br>
+
+            I know you once said you haven't fully seen your future yet, and that's okay. But somehow, I've started imagining mine—and you're part of it. Maybe we don't have everything figured out yet, but maybe that's something we can discover together.<br><br>
+
+            After that night we talked, something became clear to me. I started seeing myself loving you, and surprisingly, it didn't scare me.<br><br>
+
+            We already have so many good memories—our random conversations, the unexpected dates, and the simple days that somehow turned into happy ones. Even when we didn't have much money, we still found ways to enjoy our time together.<br><br>
+
+            That's what I like about us. Being with you feels natural and real.<br><br>
+
+            So wherever this path takes us, I hope we keep choosing each other. Let's keep building memories, chasing dreams, and supporting each other along the way.<br><br>
+
+            I'm here. And I hope you'll stay too.
+        `;
+
+        const FINAL_LETTER_PHOTO = {
+            src: "Us.jpg",
+            style: "polaroid",
+            caption: "For My Love"
+        };
+
+        const THEMES = {
+            gray: { primary: '#94a3b8', glow: 'rgba(148, 163, 184, 0.3)', particle: '#cbd5e1' },
+            blue: { primary: '#60a5fa', glow: 'rgba(96, 165, 250, 0.3)', particle: '#93c5fd' },
+            gold: { primary: '#fbbf24', glow: 'rgba(251, 191, 36, 0.3)', particle: '#fcd34d' },
+            purple: { primary: '#c084fc', glow: 'rgba(192, 132, 252, 0.3)', particle: '#d8b4fe' },
+            pink: { primary: '#f472b6', glow: 'rgba(244, 114, 182, 0.3)', particle: '#f9a8d4' },
+            rose: { primary: '#fb7185', glow: 'rgba(251, 113, 133, 0.3)', particle: '#fda4af' },
+            red: { primary: '#e11d48', glow: 'rgba(225, 29, 72, 0.3)', particle: '#fb7185' },
+            crimson: { primary: '#be123c', glow: 'rgba(190, 18, 60, 0.3)', particle: '#e11d48' },
+            wine: { primary: '#9f1239', glow: 'rgba(159, 18, 57, 0.3)', particle: '#be123c' },
+            love: { primary: '#ff006e', glow: 'rgba(255, 0, 110, 0.3)', particle: '#ff006e' },
+            white: { primary: '#ffffff', glow: 'rgba(255, 255, 255, 0.5)', particle: '#ffffff' }
+        };
+        // ==========================================
+        // SYSTEM CODE - DO NOT EDIT
+        // ==========================================
+
+        let currentScene = 0;
+        let particles = [];
+        let animationId;
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function init() {
+            resize();
+            createParticles();
+            createProgressDots();
+            renderScene(0);
+            animate();
+            document.getElementById('letterContent').innerHTML = FINAL_LETTER_CONTENT;
+            setupFinalLetterPhoto();
+        }
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resize);
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = (Math.random() - 0.5) * 2;
+                this.speedY = (Math.random() - 0.5) * 2;
+                this.life = Math.random() * 100;
+                this.opacity = Math.random() * 0.5 + 0.3;
+            }
+
+            update(mode, color) {
+                this.life++;
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+
+                switch(mode) {
+                    case 'chaos':
+                        this.x += this.speedX * 2;
+                        this.y += this.speedY * 2;
+                        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+                        break;
+                    case 'focus':
+                        this.x += (centerX - this.x) * 0.02;
+                        this.y += (centerY - this.y) * 0.02;
+                        break;
+                    case 'orbit':
+                        const angle = Math.atan2(this.y - centerY, this.x - centerX);
+                        const radius = Math.sqrt(Math.pow(this.x - centerX, 2) + Math.pow(this.y - centerY, 2));
+                        const newAngle = angle + 0.02;
+                        this.x = centerX + Math.cos(newAngle) * radius;
+                        this.y = centerY + Math.sin(newAngle) * radius;
+                        break;
+                    case 'scatter':
+                        this.x += (this.x - centerX) * 0.01;
+                        this.y += (this.y - centerY) * 0.01;
+                        break;
+                    case 'burst':
+                        if (this.life < 50) {
+                            this.x += this.speedX * 5;
+                            this.y += this.speedY * 5;
+                        } else {
+                            this.x += (centerX - this.x) * 0.05;
+                            this.y += (centerY - this.y) * 0.05;
+                        }
+                        break;
+                    case 'pulse':
+                        const pulse = Math.sin(this.life * 0.05) * 50;
+                        this.x = centerX + Math.cos(this.life * 0.02) * (200 + pulse);
+                        this.y = centerY + Math.sin(this.life * 0.02) * (200 + pulse);
+                        break;
+                    case 'bloom':
+                        this.size += 0.02;
+                        this.x += Math.sin(this.life * 0.05) * 2;
+                        this.y += Math.cos(this.life * 0.05) * 2;
+                        if (this.size > 5) this.size = 1;
+                        break;
+                    case 'spiral':
+                        const spiralAngle = this.life * 0.02;
+                        const spiralRadius = 100 + this.life * 0.5;
+                        this.x = centerX + Math.cos(spiralAngle) * spiralRadius;
+                        this.y = centerY + Math.sin(spiralAngle) * spiralRadius;
+                        break;
+                    case 'glow':
+                        this.opacity = 0.3 + Math.sin(this.life * 0.05) * 0.3;
+                        break;
+                    case 'heart':
+                        const t = (this.life * 0.01) % (Math.PI * 2);
+                        const scale = Math.min(canvas.width, canvas.height) / 30;
+                        const hx = 16 * Math.pow(Math.sin(t), 3);
+                        const hy = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+                        this.x += (centerX + hx * scale - this.x) * 0.05;
+                        this.y += (centerY + hy * scale - this.y) * 0.05;
+                        break;
+                    case 'explode':
+                        if (this.life < 100) {
+                            this.x += this.speedX * 8;
+                            this.y += this.speedY * 8;
+                            this.size += 0.1;
+                        } else {
+                            this.reset();
+                        }
+                        break;
+                }
+
+                if (this.life > 500) this.reset();
+            }
+
+            draw(color) {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = color;
+                ctx.fill();
+            }
+        }
+
+        function createParticles() {
+            particles = [];
+            for (let i = 0; i < 150; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.fillStyle = 'rgba(5, 5, 5, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const currentTheme = THEMES[STORY_DATA[currentScene].theme];
+            
+            particles.forEach(p => {
+                p.update(STORY_DATA[currentScene].particleMode, currentTheme.particle);
+                p.draw(currentTheme.particle);
+            });
+
+            ctx.strokeStyle = currentTheme.glow;
+            ctx.lineWidth = 0.5;
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    if (dist < 100) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            animationId = requestAnimationFrame(animate);
+        }
+
+        function createProgressDots() {
+            const container = document.getElementById('progressDots');
+            STORY_DATA.forEach((_, i) => {
+                const dot = document.createElement('div');
+                dot.className = 'scene-dot';
+                dot.id = `dot-${i}`;
+                dot.onclick = () => goToScene(i);
+                container.appendChild(dot);
+            });
+        }
+
+        function updateDots() {
+            STORY_DATA.forEach((_, i) => {
+                const dot = document.getElementById(`dot-${i}`);
+                dot.className = 'scene-dot';
+                if (i === currentScene) dot.classList.add('active');
+                else if (i < currentScene) dot.classList.add('visited');
+            });
+        }
+
+        function renderPhoto(sceneData) {
+            const container = document.getElementById('photoContainer');
+            
+            if (!sceneData.photo) {
+                container.classList.add('hidden');
+                container.innerHTML = '';
+                return;
+            }
+            
+            container.classList.remove('hidden');
+            
+            if (sceneData.photoStyle === 'polaroid') {
+                container.innerHTML = `
+                    <div class="photo-polaroid">
+                        <img src="${sceneData.photo}" alt="Memory" onerror="this.style.display='none'">
+                        ${sceneData.photoCaption ? `<div class="photo-caption">${sceneData.photoCaption}</div>` : ''}
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <img src="${sceneData.photo}" alt="Memory" class="scene-photo" onerror="this.style.display='none'">
+                `;
+            }
+        }
+
+        function setupFinalLetterPhoto() {
+            if (FINAL_LETTER_PHOTO && FINAL_LETTER_PHOTO.src) {
+                const container = document.getElementById('finalPhotoContainer');
+                container.classList.remove('hidden');
+                
+                if (FINAL_LETTER_PHOTO.style === 'polaroid') {
+                    container.innerHTML = `
+                        <div class="photo-polaroid transform rotate-2">
+                            <img src="${FINAL_LETTER_PHOTO.src}" alt="Us" onerror="this.style.display='none'">
+                            ${FINAL_LETTER_PHOTO.caption ? `<div class="photo-caption">${FINAL_LETTER_PHOTO.caption}</div>` : ''}
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = `
+                        <img src="${FINAL_LETTER_PHOTO.src}" alt="Us" class="scene-photo" onerror="this.style.display='none'">
+                    `;
+                }
+            }
+        }
+        function renderScene(index) {
+            const data = STORY_DATA[index];
+            const theme = THEMES[data.theme];
+            const contentArea = document.getElementById('contentArea');
+            const card = document.getElementById('mainCard');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            renderPhoto(data);
+
+            card.style.boxShadow = `0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 100px ${theme.glow}`;
+
+            contentArea.style.opacity = '0';
+            contentArea.style.transform = 'translateY(30px)';
+
+            setTimeout(() => {
+                contentArea.innerHTML = `
+                    <div class="mb-8">
+                        <div class="font-cinzel text-xs tracking-[0.5em] uppercase mb-4 text-gray-400">${data.chapter}</div>
+                        <h1 class="font-playfair text-5xl md:text-7xl font-bold text-gradient text-glow mb-2">${data.title}</h1>
+                        <div class="text-4xl mt-4 float-slow">${data.icon}</div>
+                    </div>
+                    <div class="space-y-6">
+                        <p class="font-playfair text-xl md:text-2xl leading-relaxed text-gray-200 px-4">
+                            ${data.content}
+                        </p>
+                        <p class="font-script text-2xl md:text-3xl text-pink-300 opacity-80">
+                            ${data.subtext}
+                        </p>
+                    </div>
+                `;
+
+                contentArea.style.opacity = '1';
+                contentArea.style.transform = 'translateY(0)';
+            }, 400);
+
+            prevBtn.style.display = index === 0 ? 'none' : 'block';
+            
+            if (index === STORY_DATA.length - 1) {
+                nextBtn.textContent = 'Read My Letter';
+                nextBtn.onclick = showFinalLetter;
+                nextBtn.classList.add('bg-pink-500', 'text-white');
+                nextBtn.classList.remove('bg-white', 'text-black');
+            } else {
+                nextBtn.textContent = index === 0 ? 'Begin Journey' : 'Continue';
+                nextBtn.onclick = () => navigate(1);
+                nextBtn.classList.remove('bg-pink-500', 'text-white');
+                nextBtn.classList.add('bg-white', 'text-black');
+            }
+
+            updateDots();
+            
+            // Scroll to top when changing scenes
+            card.scrollTop = 0;
+        }
+
+        function navigate(direction) {
+            const newIndex = currentScene + direction;
+            if (newIndex >= 0 && newIndex < STORY_DATA.length) {
+                currentScene = newIndex;
+                renderScene(currentScene);
+            }
+        }
+
+        function goToScene(index) {
+            currentScene = index;
+            renderScene(currentScene);
+        }
+
+        function showFinalLetter() {
+            const card = document.getElementById('mainCard');
+            const letter = document.getElementById('finalLetter');
+            
+            card.style.transform = 'scale(0.9) translateY(-20px)';
+            card.style.opacity = '0.5';
+            
+            letter.classList.remove('hidden');
+            setTimeout(() => {
+                letter.classList.remove('scale-95', 'opacity-0');
+                letter.classList.add('scale-100', 'opacity-100');
+                letter.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+
+        function hideFinalLetter() {
+            const card = document.getElementById('mainCard');
+            const letter = document.getElementById('finalLetter');
+            
+            letter.classList.add('scale-95', 'opacity-0');
+            letter.classList.remove('scale-100', 'opacity-100');
+            
+            setTimeout(() => {
+                letter.classList.add('hidden');
+                card.style.transform = 'scale(1) translateY(0)';
+                card.style.opacity = '1';
+                card.scrollTop = 0;
+            }, 300);
+        }
+
+        init();
+    </script>
+</body>
+</html>
